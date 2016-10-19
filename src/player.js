@@ -29,6 +29,8 @@ function Player(position, canvas) {
   this.thrusting = false;
   this.steerLeft = false;
   this.steerRight = false;
+  this.shots = 0;
+  this.color = 'white';
 
   var self = this;
   window.onkeydown = function(event) {
@@ -44,6 +46,9 @@ function Player(position, canvas) {
       case 'ArrowRight': // right
       case 'd':
         self.steerRight = true;
+        break;
+      case 'v':
+        self.shots = 1;
         break;
     }
   }
@@ -67,6 +72,13 @@ function Player(position, canvas) {
 }
 
 
+Player.prototype.spawn = function() {
+  this.position.x = this.worldWidth/2;
+  this.position.y = this.worldHeight/2;
+  this.velocity.x = 0;
+  this.velocity.y = 0;
+  this.angle = 0;
+}
 
 /**
  * @function updates the player object
@@ -75,7 +87,7 @@ function Player(position, canvas) {
 Player.prototype.update = function(time) {
   // Apply angular velocity
   if(this.steerLeft) {
-    this.angle += time * 0.005;
+    this.angle += 0.1;
   }
   if(this.steerRight) {
     this.angle -= 0.1;
@@ -116,7 +128,7 @@ Player.prototype.render = function(time, ctx) {
   ctx.lineTo(0, 0);
   ctx.lineTo(10, 10);
   ctx.closePath();
-  ctx.strokeStyle = 'white';
+  ctx.strokeStyle = this.color;
   ctx.stroke();
 
   // Draw engine thrust
